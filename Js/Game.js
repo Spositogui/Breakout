@@ -139,5 +139,9 @@ function hitPlayer(player, ballGroup)
 function hitBrick(ball, bricks)
 {
 	bricks.disableBody(true, true);
-	ballGroup.body.velocity.y = -1* ballVelocity;
+   
+    if(ballGroup.body.y > bricks.y)
+	   ballGroup.body.velocity.y = ballVelocity;
+    else if(ballGroup.body.y < bricks.y)
+        ballGroup.body.velocity.y = -ballVelocity;
 }
