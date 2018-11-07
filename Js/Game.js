@@ -2,6 +2,8 @@ var spaceBarBool = false;
 var spaceBarB;
 var ballVelocity = 150;
 var bricksGroup;
+var count;
+var brickSound;
 
 class Game extends Phaser.Scene
 {
@@ -10,13 +12,18 @@ class Game extends Phaser.Scene
 
 	preload()
 	{
+
+		//audio
+		this.load.audio('hitBrick', 'Audio/hitBricks.wav');
+		
+		//images
 		this.load.image('player', 'Images/paddle.png');
 		this.load.image('redBrick', 'Images/redBrick.png');
 		this.load.image('greenBrick', 'Images/greenBrick.png');
 		this.load.image('blueBrick', 'Images/blueBrick.png');
 		this.load.image('yellowBrick', 'Images/yellowBrick.png');
-		this.load.spritesheet('ball1', 'Images/ball1.png',{
-			frameWidth: 10, 
+		this.load.spritesheet('ballGroup', 'Images/ballGroup.png',{
+			frameWidth: 8, 
 			frameHeight: 8
 		});
 	}
@@ -24,20 +31,25 @@ class Game extends Phaser.Scene
 	create()
 	{
 		
+		//bricks
 		bricksGroup = this.physics.add.group();
 		generateBricks(bricksGroup);
 
+		brickSound = this.sound.add('hitBrick');
+
+		//jogador
 		player = this.physics.add.sprite(300, 270, 'player');
 		player.body.setAllowGravity(false);
 		player.setCollideWorldBounds(true);
 
-		
+		//ball
 		ballGroup = this.physics.add.sprite(player.body.x, 
 			player.y - player.body.height, 'ball1');
 		ballGroup.body.setAllowGravity(false);
 		ballGroup.setCollideWorldBounds(true);
 		ballGroup.setBounce(1, 1);
 
+		//game config
 		cursors = this.input.keyboard.createCursorKeys();
 		spaceBarB = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 		speed = 200;
@@ -46,10 +58,76 @@ class Game extends Phaser.Scene
 		this.physics.add.overlap(player, ballGroup, hitPlayer, null, this);
 		this.physics.add.overlap(ballGroup, bricksGroup, hitBrick, null, this);
 
+		//ball anims
+		this.anims.create({
+        	key: 'zero',
+        	frames: this.anims.generateFrameNumbers('ballGroup', {
+            	start: 0,
+            	end: 0
+        	}),
+        	frameRate: 10,
+        	repeat: -1
+   		});
+		
+		this.anims.create({
+        	key: 'um',
+        	frames: this.anims.generateFrameNumbers('ballGroup', {
+            	start: 1,
+            	end: 1
+        	}),
+        	frameRate: 10,
+        	repeat: -1
+    	});
+		
+		this.anims.create({
+        	key: 'dois',
+        	frames: this.anims.generateFrameNumbers('ballGroup', {
+            	start: 2,
+            	end: 2
+        	}),
+        	frameRate: 10,
+        	repeat: -1
+    	});
+
+		this.anims.create({
+       		key: 'tres',
+        	frames: this.anims.generateFrameNumbers('ballGroup', {
+            	start: 3,
+            	end: 3
+        	}),
+       	 	frameRate: 10,
+        	repeat: -1
+    	});
+		
+		this.anims.create({
+        	key: 'quatro',
+        	frames: this.anims.generateFrameNumbers('ballGroup', {
+            	start: 4,
+            	end: 4
+       		 }),
+        	rameRate: 10,
+        	repeat: -1
+   		});
+
+		count = 0;
+
 	}
 
 	update()
 	{
+
+		//ball anims
+		if(count == 0)
+			 ballGroup.anims.play('zero', true);
+		else if(count == 1)
+			 ballGroup.anims.play('um', true);
+		else if(count == 2)
+			 ballGroup.anims.play('dois', true);
+		else if(count == 3)
+			 ballGroup.anims.play('tres', true);
+		else if(count == 4)
+			 ballGroup.anims.play('quatro', true);
+
 		//player moves
 		if (cursors.left.isDown)
         	player.setVelocityX(-speed);
@@ -138,8 +216,19 @@ function hitPlayer(player, ballGroup)
 
 function hitBrick(ball, bricks)
 {
+	//audio
+	brickSound.play();
+
+	//destroy brick
 	bricks.disableBody(true, true);
+
+	//ball animation
+	if(count < 5)
+		count ++;
+	if(count > 4) 
+		count = 0;
    
+   //change ball direction
     if(ballGroup.body.y > bricks.y)
 	   ballGroup.body.velocity.y = ballVelocity;
     else if(ballGroup.body.y < bricks.y)
