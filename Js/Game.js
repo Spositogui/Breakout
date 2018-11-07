@@ -48,7 +48,7 @@ class Game extends Phaser.Scene
 		ballGroup.body.setAllowGravity(false);
 		ballGroup.setCollideWorldBounds(true);
 		ballGroup.setBounce(1, 1);
-		ballGroup.body.setSize(8, 8, 8, 8);
+		ballGroup.body.setSize(8, 8, 0, 0);
 
 		//game config
 		cursors = this.input.keyboard.createCursorKeys();
@@ -56,7 +56,7 @@ class Game extends Phaser.Scene
 		speed = 200;
 
 		//colision
-		this.physics.add.overlap(player, ballGroup, hitPlayer, null, this);
+		this.physics.add.overlap(ballGroup, player, hitPlayer, null, this);
 		this.physics.add.overlap(ballGroup, bricksGroup, hitBrick, null, this);
 
 		//ball anims
@@ -112,6 +112,7 @@ class Game extends Phaser.Scene
 
 		count = 0;
 
+		//ballGroup.debug.body;
 	}
 
 	update()
@@ -189,13 +190,13 @@ function generateBricks(bricksGroup)
 	}
 }
 
-function hitPlayer(player, ballGroup)
+function hitPlayer(ballGroup, player)
 {
 	console.log("colisao");
 	let diff = 0;
 
 
-	if(ballGroup.body.y == player.body.y)
+	if(ballGroup.y == player.body.y)
 	{
 		ballGroup.body.velocity.y = -ballVelocity;
 	}
