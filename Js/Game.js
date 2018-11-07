@@ -48,6 +48,7 @@ class Game extends Phaser.Scene
 		ballGroup.body.setAllowGravity(false);
 		ballGroup.setCollideWorldBounds(true);
 		ballGroup.setBounce(1, 1);
+		ballGroup.body.setSize(8, 8, 8, 8);
 
 		//game config
 		cursors = this.input.keyboard.createCursorKeys();
@@ -150,8 +151,6 @@ class Game extends Phaser.Scene
     		ballGroup.body.velocity.x = -10;
     		ballGroup.body.velocity.y = -ballVelocity;
     	}
-
-
 	}
 
 }
