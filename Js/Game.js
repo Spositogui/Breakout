@@ -260,3 +260,9 @@ function hitBrick(ball, bricks)
     score += 10;
     scoreTxt.setText('SCORE: ' + score);
 }
+
+
+function gameOver()
+{
+
+}
