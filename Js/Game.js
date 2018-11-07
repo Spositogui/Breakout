@@ -32,6 +32,7 @@ class Game extends Phaser.Scene
 		
 		//images
 		this.load.image('player', 'Images/paddle.png');
+        this.load.image('scoreImg', 'Images/ScoreImg.png');
 		this.load.image('redBrick', 'Images/redBrick.png');
 		this.load.image('greenBrick', 'Images/greenBrick.png');
 		this.load.image('blueBrick', 'Images/blueBrick.png');
@@ -130,8 +131,9 @@ class Game extends Phaser.Scene
 
 		//HUD
 		score = 0;
-		scoreTxt = this.add.text(10, 10, "SCORE: 0", {
-			fontSize:  "18px", fill: "#fff"
+        let highScore = this.add.sprite(50, 280, 'scoreImg');
+		scoreTxt = this.add.text(100, 275, "0", {
+			fontSize:  "22px", fill: "#fff"
 		});
 
 	}
@@ -177,7 +179,10 @@ class Game extends Phaser.Scene
     	
     	//game Over
     	if(ballGroup.y > player.y + player.body.height)
-    		gameOver();
+        {
+    		GameOverFunc();
+            this.scene.start('GameOver');
+        }
 	}
 
 }
@@ -266,11 +271,11 @@ function hitBrick(ball, bricks)
 
     //score
     score += 10;
-    scoreTxt.setText('SCORE: ' + score);
+    scoreTxt.setText(score);
 }
 
 
-function gameOver()
+function GameOverFunc()
 {
 	ballGroup.body.setVelocityY(0);
 	ballGroup.body.setVelocityX(0);
