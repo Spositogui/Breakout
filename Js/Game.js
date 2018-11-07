@@ -181,7 +181,7 @@ class Game extends Phaser.Scene
 function generateBricks(bricksGroup)
 {
 	let brick;
-	let columns = 10;
+	let columns = 9;
 	let rows = 4;
 	let xOffSet = 50;
 	let yOffSet = 35;
@@ -193,16 +193,16 @@ function generateBricks(bricksGroup)
 			let chooseBrick = Phaser.Math.Between(1, 4);
 			
 			if(chooseBrick == 1){
-				brick = bricksGroup.create(x * xOffSet, y * yOffSet, 'yellowBrick');	
+				brick = bricksGroup.create((x+2) * xOffSet, (y+0.5) * yOffSet, 'yellowBrick');	
 			}
 			else if(chooseBrick == 2){
-				brick = bricksGroup.create(x * xOffSet, y * yOffSet, 'greenBrick');	
+				brick = bricksGroup.create((x+2) * xOffSet, (y+0.5) * yOffSet, 'greenBrick');	
 			}
 			else if(chooseBrick == 3){
-				brick = bricksGroup.create(x * xOffSet, y * yOffSet, 'blueBrick');
+				brick = bricksGroup.create((x+2) * xOffSet, (y+0.5) * yOffSet, 'blueBrick');
 			}
 			else{
-				brick = bricksGroup.create(x * xOffSet, y * yOffSet, 'redBrick');	
+				brick = bricksGroup.create((x+2) * xOffSet, (y+0.5) * yOffSet, 'redBrick');	
 			}
 			
 			brick.body.setAllowGravity(false);
