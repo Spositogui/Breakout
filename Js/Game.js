@@ -174,6 +174,11 @@ class Game extends Phaser.Scene
     		ballGroup.body.velocity.x = -10;
     		ballGroup.body.velocity.y = -ballVelocity;
     	}
+
+    	if(ballGroup.y > player.y + player.body.height)
+    	{
+    		gameOver();
+    	}
 	}
 
 }
@@ -183,26 +188,30 @@ function generateBricks(bricksGroup)
 	let brick;
 	let columns = 9;
 	let rows = 4;
-	let xOffSet = 50;
-	let yOffSet = 35;
+	let xOffSet = 50;//distancia em x
+	let yOffSet = 35;//distancia em y
 
 	for(let y = 0; y < rows; y++)
 	{
 		for(let x = 0; x < columns; x++)
 		{
-			let chooseBrick = Phaser.Math.Between(1, 4);
+			let chooseBrick = Phaser.Math.Between(1, 4);//color random
 			
 			if(chooseBrick == 1){
-				brick = bricksGroup.create((x+2) * xOffSet, (y+0.5) * yOffSet, 'yellowBrick');	
+				brick = bricksGroup.create((x+2) * xOffSet, 
+				(y+0.5) * yOffSet, 'yellowBrick');	
 			}
 			else if(chooseBrick == 2){
-				brick = bricksGroup.create((x+2) * xOffSet, (y+0.5) * yOffSet, 'greenBrick');	
+				brick = bricksGroup.create((x+2) * xOffSet, 
+				(y+0.5) * yOffSet, 'greenBrick');	
 			}
 			else if(chooseBrick == 3){
-				brick = bricksGroup.create((x+2) * xOffSet, (y+0.5) * yOffSet, 'blueBrick');
+				brick = bricksGroup.create((x+2) * xOffSet, 
+				(y+0.5) * yOffSet, 'blueBrick');
 			}
 			else{
-				brick = bricksGroup.create((x+2) * xOffSet, (y+0.5) * yOffSet, 'redBrick');	
+				brick = bricksGroup.create((x+2) * xOffSet, 
+				(y+0.5) * yOffSet, 'redBrick');	
 			}
 			
 			brick.body.setAllowGravity(false);
@@ -218,17 +227,17 @@ function hitPlayer(ballGroup, player)
 	let diff = 0;
 
 
-	if(ballGroup.y == player.body.y)
+	if(ballGroup.y == player.body.y)//se a bola bater no centro
 	{
 		ballGroup.body.velocity.y = -ballVelocity;
 	}
-	if(ballGroup.x < player.x)
+	if(ballGroup.x < player.x)// se a bola na lateral esquerda
 	{
 		diff = player.x - ballGroup.x;
 		ballGroup.body.velocity.x = (-5 * diff);
 		ballGroup.body.velocity.y = -ballVelocity;
 	}
-	if(ballGroup.x > player.x)
+	if(ballGroup.x > player.x)// se a bola bater na lateral direita
 	{
 		diff = ballGroup.x - player.x;
 		ballGroup.body.velocity.x = (5 * diff);
@@ -264,5 +273,7 @@ function hitBrick(ball, bricks)
 
 function gameOver()
 {
-
+	ballGroup.body.setVelocityY(0);
+	ballGroup.body.setVelocityX(0);
+	console.log('GameOver');
 }
