@@ -1,9 +1,24 @@
+//player
+var player;
+var cursors;
+var speed;
+
+//ball
+var ball;
+var ballGroup;
 var spaceBarBool = false;
 var spaceBarB;
 var ballVelocity = 150;
-var bricksGroup;
 var count;
+
+//bricks
 var brickSound;
+var bricksGroup;
+
+//HUD
+var highSore;
+var score;
+var scoreTxt;
 
 class Game extends Phaser.Scene
 {
@@ -112,6 +127,13 @@ class Game extends Phaser.Scene
    		});
 
 		count = 0;
+
+		//HUD
+		score = 0;
+		scoreTxt = this.add.text(10, 10, "SCORE: 0", {
+			fontSize:  "18px", fill: "#fff"
+		});
+
 	}
 
 	update()
@@ -233,4 +255,8 @@ function hitBrick(ball, bricks)
 	   ballGroup.body.velocity.y = ballVelocity;
     else if(ballGroup.body.y < bricks.y)
         ballGroup.body.velocity.y = -ballVelocity;
+
+    //score
+    score += 10;
+    scoreTxt.setText('SCORE: ' + score);
 }

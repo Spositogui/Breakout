@@ -15,9 +15,5 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
-
-var player;
-var ball;
-var cursors;
-var speed;
-var ballGroup;
+var widthSize = this.game.config.width;
+var heightSize = this.game.config.height;
