@@ -12,7 +12,6 @@ class Game extends Phaser.Scene
 
 	preload()
 	{
-
 		//audio
 		this.load.audio('hitBrick', 'Audio/hitBricks.wav');
 		
@@ -43,12 +42,14 @@ class Game extends Phaser.Scene
 		player.setCollideWorldBounds(true);
 
 		//ball
-		ballGroup = this.physics.add.sprite(player.body.x, 
-			player.y - player.body.height, 'ball1');
+		ballGroup = this.physics.add.sprite(
+			player.body.x, 
+			player.y - player.body.height, 'ball1'
+		);
 		ballGroup.body.setAllowGravity(false);
 		ballGroup.setCollideWorldBounds(true);
 		ballGroup.setBounce(1, 1);
-		ballGroup.body.setSize(8, 8, 0, 0);
+		ballGroup.body.setSize(8, 8, 0, 0);//tamanho do colider
 
 		//game config
 		cursors = this.input.keyboard.createCursorKeys();
@@ -111,8 +112,6 @@ class Game extends Phaser.Scene
    		});
 
 		count = 0;
-
-		//ballGroup.debug.body;
 	}
 
 	update()
@@ -146,6 +145,7 @@ class Game extends Phaser.Scene
     	if(!spaceBarBool)
     		ballGroup.x = player.x;
 
+    	//release ball
     	if(spaceBarB.isDown && !spaceBarBool)
     	{
     		spaceBarBool = true;
@@ -222,7 +222,7 @@ function hitBrick(ball, bricks)
 	//destroy brick
 	bricks.disableBody(true, true);
 
-	//ball animation
+	//ball animation(color)
 	if(count < 5)
 		count ++;
 	if(count > 4) 
