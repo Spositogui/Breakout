@@ -174,11 +174,10 @@ class Game extends Phaser.Scene
     		ballGroup.body.velocity.x = -10;
     		ballGroup.body.velocity.y = -ballVelocity;
     	}
-
+    	
+    	//game Over
     	if(ballGroup.y > player.y + player.body.height)
-    	{
     		gameOver();
-    	}
 	}
 
 }
@@ -226,7 +225,7 @@ function hitPlayer(ballGroup, player)
 	console.log("colisao");
 	let diff = 0;
 
-
+	//change ball direction
 	if(ballGroup.y == player.body.y)//se a bola bater no centro
 	{
 		ballGroup.body.velocity.y = -ballVelocity;
@@ -275,5 +274,5 @@ function gameOver()
 {
 	ballGroup.body.setVelocityY(0);
 	ballGroup.body.setVelocityX(0);
-	console.log('GameOver');
+	//console.log('GameOver');
 }
