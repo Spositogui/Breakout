@@ -180,7 +180,9 @@ class Game extends Phaser.Scene
     	//game Over
     	if(ballGroup.y > player.y + player.body.height)
         {
-    		GameOverFunc();
+    		ballGroup.body.setVelocityY(0);
+			ballGroup.body.setVelocityX(0);
+			spaceBarBool = false;
             this.scene.start('GameOver');
         }
 	}
@@ -227,7 +229,6 @@ function generateBricks(bricksGroup)
 
 function hitPlayer(ballGroup, player)
 {
-	console.log("colisao");
 	let diff = 0;
 
 	//change ball direction
@@ -272,12 +273,4 @@ function hitBrick(ball, bricks)
     //score
     score += 10;
     scoreTxt.setText(score);
-}
-
-
-function GameOverFunc()
-{
-	ballGroup.body.setVelocityY(0);
-	ballGroup.body.setVelocityX(0);
-	//console.log('GameOver');
 }
