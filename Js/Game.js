@@ -15,6 +15,8 @@ let releaseBall = false;
 //bricks
 var brickSound;
 var bricksGroup;
+let timer;
+let spawn;
 
 //HUD
 var highSore;
@@ -189,6 +191,12 @@ class Game extends Phaser.Scene
 			fontSize:  "22px", fill: "#fff"
 		});
 
+	//time generate bricks
+	timer = this.time.addEvent({
+   	  	delay: 3000,  
+   	  	callbackScope: this, 
+   	  	loop: true 
+   	});
 	}
 
 	update()
@@ -206,11 +214,17 @@ class Game extends Phaser.Scene
 		else if(count == 4)
 			 ballGroup.anims.play('quatro', true);
 
-		//player moves
-		if (cursors.left.isDown)
-        	player.setVelocityX(-speed);
-    	else if (cursors.right.isDown)
-        	player.setVelocityX(speed);
+		console.log(spawn = Math.floor(3000 - timer.getElapsed()));  
+		if (spawn < 100)
+		{
+        	
+        	bricksGroup.setVelocityY(100);
+		}
+		else if(spawn >= 2700)
+		{
+			bricksGroup.setVelocityY(0);
+		}
+    	
     	
     	//limite player Y
     	if(player.y > 270)
@@ -272,7 +286,7 @@ function generateBricks(bricksGroup)
 			}
 			
 			brick.body.setAllowGravity(false);
-			brick.body.setImmovable(true);
+			//brick.body.setImmovable(true);
 		}
 		
 	}
