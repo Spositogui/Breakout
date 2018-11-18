@@ -10,6 +10,7 @@ var spaceBarBool = false;
 var spaceBarB;
 var ballVelocity = 150;
 var count;
+let releaseBall = false;
 
 //bricks
 var brickSound;
@@ -32,6 +33,7 @@ class Game extends Phaser.Scene
 		
 		//images
 		this.load.image('player', 'Images/paddle.png');
+		this.load.image('controller', 'Images/controller.png');
         this.load.image('scoreImg', 'Images/ScoreImg.png');
 		this.load.image('redBrick', 'Images/redBrick.png');
 		this.load.image('greenBrick', 'Images/greenBrick.png');
@@ -57,6 +59,57 @@ class Game extends Phaser.Scene
 		player.body.setAllowGravity(false);
 		player.setCollideWorldBounds(true);
 
+		//player controllers
+		let leftButton = this.add.sprite(150, heightSize-50,'controller').setInteractive();
+		let rightButton = this.add.sprite(widthSize-150, heightSize-50, 'controller').setInteractive();
+		let canMove = true;
+
+		leftButton.on('pointerdown', function(pointer){
+			
+			canMove = true;
+			if(canMove)
+				player.setVelocityX(-speed);
+
+			if(!releaseBall)
+			{
+				ballGroup.body.velocity.x = -10;
+    			ballGroup.body.velocity.y = -ballVelocity;
+    			releaseBall = true;
+			}
+		
+		},this);
+
+		rightButton.on('pointerdown', function(pointer){
+			
+			canMove = true;
+			if(canMove)
+				player.setVelocityX(speed);
+			if(!releaseBall)
+			{
+				ballGroup.body.velocity.x = -10;
+    			ballGroup.body.velocity.y = -ballVelocity;
+    			releaseBall = true;
+			}
+
+		}, this);
+
+		leftButton.on('pointerup', function(pointer){
+			
+			canMove = false;
+			if(!canMove)
+				player.setVelocityX(0);
+
+		},this);
+
+		rightButton.on('pointerup', function(pointer){
+			
+			canMove = false;
+			if(!canMove)
+				player.setVelocityX(0);
+
+		},this);
+
+		
 		//ball
 		ballGroup = this.physics.add.sprite(
 			player.body.x, 
@@ -158,31 +211,29 @@ class Game extends Phaser.Scene
         	player.setVelocityX(-speed);
     	else if (cursors.right.isDown)
         	player.setVelocityX(speed);
-    	else
-    		player.setVelocityX(0);
     	
     	//limite player Y
     	if(player.y > 270)
     		player.y = 270;
 
     	//ball chase paddle
-    	if(!spaceBarBool)
+    	if(!releaseBall)
     		ballGroup.x = player.x;
 
-    	//release ball
+    	/*release ball
     	if(spaceBarB.isDown && !spaceBarBool)
     	{
     		spaceBarBool = true;
     		ballGroup.body.velocity.x = -10;
     		ballGroup.body.velocity.y = -ballVelocity;
-    	}
+    	}*/
     	
     	//game Over
     	if(ballGroup.y > player.y + player.body.height)
         {
     		ballGroup.body.setVelocityY(0);
 			ballGroup.body.setVelocityX(0);
-			spaceBarBool = false;
+			releaseBall = false;
             this.scene.start('GameOver');
         }
 	}
