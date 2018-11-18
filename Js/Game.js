@@ -17,6 +17,7 @@ var brickSound;
 var bricksGroup;
 let timer;
 let spawn;
+let generate = true;
 
 //HUD
 var highSore;
@@ -37,6 +38,7 @@ class Game extends Phaser.Scene
 		this.load.image('player', 'Images/paddle.png');
 		this.load.image('controller', 'Images/controller.png');
         this.load.image('scoreImg', 'Images/ScoreImg.png');
+        this.load.image('brickGameOver', 'Images/brickEnd.png');
 		this.load.image('redBrick', 'Images/redBrick.png');
 		this.load.image('greenBrick', 'Images/greenBrick.png');
 		this.load.image('blueBrick', 'Images/blueBrick.png');
@@ -49,17 +51,22 @@ class Game extends Phaser.Scene
 
 	create()
 	{
-		
-		//bricks
-		bricksGroup = this.physics.add.group();
-		generateBricks(bricksGroup);
-
-		brickSound = this.sound.add('hitBrick');
 
 		//jogador
 		player = this.physics.add.sprite(300, 270, 'player');
 		player.body.setAllowGravity(false);
 		player.setCollideWorldBounds(true);
+		
+		//bricks
+		bricksGroup = this.physics.add.group();
+		brickSound = this.sound.add('hitBrick');
+		generateBricks(bricksGroup, 9, 2);
+
+		let brickGameOver = this.physics.add.sprite(widthSize/2, 
+			player.y, 'brickGameOver');
+		brickGameOver.body.setAllowGravity(false);
+		brickGameOver.body.setImmovable(true);
+
 
 		//player controllers
 		let leftButton = this.add.sprite(150, heightSize-50,'controller').setInteractive();
@@ -130,6 +137,7 @@ class Game extends Phaser.Scene
 		//colision
 		this.physics.add.overlap(ballGroup, player, hitPlayer, null, this);
 		this.physics.add.overlap(ballGroup, bricksGroup, hitBrick, null, this);
+		this.physics.add.overlap(bricksGroup, brickGameOver,  gameOver, null, this);
 
 		//ball anims
 		this.anims.create({
@@ -191,12 +199,12 @@ class Game extends Phaser.Scene
 			fontSize:  "22px", fill: "#fff"
 		});
 
-	//time generate bricks
-	timer = this.time.addEvent({
-   	  	delay: 3000,  
-   	  	callbackScope: this, 
-   	  	loop: true 
-   	});
+		//time generate bricks
+		timer = this.time.addEvent({
+	   	  	delay: 3000,  
+	   	  	callbackScope: this, 
+	   	  	loop: true 
+	   	});
 	}
 
 	update()
@@ -214,18 +222,23 @@ class Game extends Phaser.Scene
 		else if(count == 4)
 			 ballGroup.anims.play('quatro', true);
 
-		console.log(spawn = Math.floor(3000 - timer.getElapsed()));  
+		//brickts down
+		spawn = Math.floor(3000 - timer.getElapsed());  
 		if (spawn < 100)
 		{
-        	
-        	bricksGroup.setVelocityY(100);
+        	if(generate)
+        	{
+        		bricksGroup.setVelocityY(300);
+        		generateBricks(bricksGroup, 9, 1);
+        		generate = false;	
+        	}
 		}
 		else if(spawn >= 2700)
 		{
 			bricksGroup.setVelocityY(0);
+			generate = true;
 		}
-    	
-    	
+    	  	
     	//limite player Y
     	if(player.y > 270)
     		player.y = 270;
@@ -233,14 +246,6 @@ class Game extends Phaser.Scene
     	//ball chase paddle
     	if(!releaseBall)
     		ballGroup.x = player.x;
-
-    	/*release ball
-    	if(spaceBarB.isDown && !spaceBarBool)
-    	{
-    		spaceBarBool = true;
-    		ballGroup.body.velocity.x = -10;
-    		ballGroup.body.velocity.y = -ballVelocity;
-    	}*/
     	
     	//game Over
     	if(ballGroup.y > player.y + player.body.height)
@@ -250,15 +255,16 @@ class Game extends Phaser.Scene
 			releaseBall = false;
             this.scene.start('GameOver');
         }
-	}
+
+	} 
 
 }
 
-function generateBricks(bricksGroup)
+function generateBricks(bricksGroup, coluna, linha)
 {
 	let brick;
-	let columns = 9;
-	let rows = 4;
+	let columns = coluna;
+	let rows = linha;
 	let xOffSet = 50;//distancia em x
 	let yOffSet = 35;//distancia em y
 
@@ -339,3 +345,16 @@ function hitBrick(ball, bricks)
     score += 10;
     scoreTxt.setText(score);
 }
+
+function gameOver(bricksGroup, brickGameOver)
+{
+	this.scene.start('GameOver');
+}
+
+/*release ball
+    	if(spaceBarB.isDown && !spaceBarBool)
+    	{
+    		spaceBarBool = true;
+    		ballGroup.body.velocity.x = -10;
+    		ballGroup.body.velocity.y = -ballVelocity;
+   }*/
